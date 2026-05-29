@@ -1,19 +1,38 @@
 <!DOCTYPE html>
 <html>
 <body>
-  <h3>Beräkna (x/y)*100</h3>
-  <label>x: <input id="x" type="number"></label><br>
-  <label>y: <input id="y" type="number"></label><br><br>
-  <button onclick="calc()">Räkna</button>
+  <h3>Automatisk beräkning från API</h3>
+  <p id="loading">Hämtar data...</p>
   <p id="result"></p>
 
-  <script>
-    function calc() {
-      const x = parseFloat(document.getElementById('x').value);
-      const y = parseFloat(document.getElementById('y').value);
-      if (!y) return document.getElementById('result').innerText = "y får inte vara 0";
-      document.getElementById('result').innerText = (x / y * 100).toFixed(2) + "%";
-    }
-  </script>
+<script>
+async function getCount(queryId) {
+  const url = `https://bdb.tkgbg.se/spvrs/services/General/Query/RunById?data=%7B%22QueryId%22:%20%22${queryId}%22%7D`;
+  const response = await fetch(url);
+  const json = await response.json();
+  return json.Value.TotalRecordCount;
+}
+
+async function run() {
+  try {
+    const count597 = await getCount(597);
+    const count143 = await getCount(143);
+
+    const percent = (count143 / count597) * 100;
+
+    document.getElementById("loading").style.display = "none";
+    document.getElementById("result").innerHTML = `
+      <strong>Resultat:</strong><br>
+      Query 597: ${count597}<br>
+      Query 143: ${count143}<br><br>
+      <strong>Procent:</strong> ${percent.toFixed(2)}%
+    `;
+  } catch (err) {
+    document.getElementById("loading").innerText = "Fel vid hämtning av data.";
+  }
+}
+
+run();
+</script>
 </body>
 </html>
