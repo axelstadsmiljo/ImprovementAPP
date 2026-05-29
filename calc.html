@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+<body>
+  <h3>Beräkna (x/y)*100</h3>
+  <label>x: <input id="x" type="number"></label><br>
+  <label>y: <input id="y" type="number"></label><br><br>
+  <button onclick="calc()">Räkna</button>
+  <p id="result"></p>
+
+  <script>
+    function calc() {
+      const x = parseFloat(document.getElementById('x').value);
+      const y = parseFloat(document.getElementById('y').value);
+      if (!y) return document.getElementById('result').innerText = "y får inte vara 0";
+      document.getElementById('result').innerText = (x / y * 100).toFixed(2) + "%";
+    }
+  </script>
+</body>
+</html>
